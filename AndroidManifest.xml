@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="lolforum.home.MainActivity"
+            android:name="smalltalk.home.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +23,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="lolforum.home.TopActivity"
+            android:name="smalltalk.home.TopActivity"
             android:label="@string/app_name" ></activity>
         <activity
-            android:name="lolforum.home.NewActivity"
+            android:name="smalltalk.home.NewActivity"
             android:label="@string/app_name" ></activity>
         <activity
-            android:name="lolforum.home.FavFragment"
+            android:name="smalltalk.home.FavFragment"
             android:label="@string/app_name" ></activity>
     </application>
 

@@ -1,4 +1,4 @@
-package lolforum.navdrawer.model;
+package smalltalk.navdrawer.model;
 
 public class NavDrawerItem {
     

@@ -1,14 +1,16 @@
-package lolforum.home;
+package smalltalk.home;
 
 import java.util.ArrayList;
 
-import lolforum.navdrawer.adapter.NavDrawerListAdapter;
-import lolforum.navdrawer.model.NavDrawerItem;
+import lolforum.home.R;
+import smalltalk.database.DBHelper;
+import smalltalk.database.DBContract.DBEntry;
+import smalltalk.navdrawer.adapter.NavDrawerListAdapter;
+import smalltalk.navdrawer.model.NavDrawerItem;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -19,15 +21,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
- 
+    int count = 0;
     // nav drawer title
     private CharSequence mDrawerTitle;
  
@@ -40,17 +46,20 @@ public class MainActivity extends FragmentActivity {
  
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    
+
+	// database
+	DBHelper dbHelper = new DBHelper(this);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		
 		// Navigation Drawer
 		mTitle = mDrawerTitle = getTitle();
 		// load slide menu items
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
- 
+        
         // nav drawer icons from resources
         navMenuIcons = getResources()
                 .obtainTypedArray(R.array.nav_drawer_icons);
@@ -176,7 +185,7 @@ public class MainActivity extends FragmentActivity {
         }*/
  
         if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
  
@@ -195,11 +204,28 @@ public class MainActivity extends FragmentActivity {
 		switch(position) {
 		case 0:
 			
-			
 			break;
 		case 1:
+			SQLiteDatabase db = dbHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			values.put(DBEntry.COLUMN_NAME_ENTRY_ID, count);
+			count++;
+			long newRowId;
+			newRowId = db.insert(DBEntry.TABLE_NAME, null, values);
+			System.out.println(count);
 			break;
 		case 2:
+			SQLiteDatabase db2 = dbHelper.getReadableDatabase();
+			
+			String[] projection = {
+					DBEntry.COLUMN_NAME_ENTRY_ID
+			};
+			
+			Cursor c = db2.query(DBEntry.TABLE_NAME, projection, null, null, null, null, null);
+			for(int i=0; i<c.getCount(); i++) {
+				c.moveToNext();
+				System.out.println(c.getInt(0));
+			}
 			break;
 		}
 	}
@@ -224,7 +250,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+       // boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
        // menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -250,7 +276,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 	
@@ -259,5 +285,9 @@ public class MainActivity extends FragmentActivity {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
 	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	public void onStart() {
+		super.onStart();
 	}
 }

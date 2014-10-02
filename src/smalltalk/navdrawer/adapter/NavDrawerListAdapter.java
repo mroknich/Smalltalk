@@ -1,9 +1,9 @@
-package lolforum.navdrawer.adapter;
+package smalltalk.navdrawer.adapter;
  
 import java.util.ArrayList;
 
+import smalltalk.navdrawer.model.NavDrawerItem;
 import lolforum.home.R;
-import lolforum.navdrawer.model.NavDrawerItem;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
